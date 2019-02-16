@@ -11,7 +11,7 @@ import Products from './components/Products.vue';
 import ProductEdit from './components/ProductEdit.vue';
 import ProductNew from './components/ProductNew.vue';
 import ProductInfo from './components/ProductInfo.vue';
-import ImageInput from './components/ImageInput.vue';
+import NotFound from './components/NotFound.vue'
 
 @Component({
   components: {
@@ -19,7 +19,7 @@ import ImageInput from './components/ImageInput.vue';
       ProductEdit,
       ProductNew,
       ProductInfo,
-      ImageInput,
+      NotFound, 
   },
 })
 export default class App extends Vue {}

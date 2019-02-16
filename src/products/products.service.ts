@@ -12,9 +12,13 @@ export class ProductsService {
         private readonly productRepository: Repository<Product>,
     ) {}
 
-    async create(info: IProduct, path: string) {
+    async create(info: IProduct, image: any) {
         const product = this.productRepository.create(info);
-        product.image = path;
+        if (image !== undefined) {
+            product.image = image.path;
+        } else {
+            product.image = undefined;
+        }
         await this.productRepository.save(product);
     }
 
@@ -22,25 +26,34 @@ export class ProductsService {
         await this.productRepository.update(info.id, info);
     }
 
-    async updateImage(id: string, path: string) {
-        await this.productRepository.update(+id, { image: path });
+    async updateImage(id: string, image: any) {
+        if (image !== undefined) {
+            this.unlinkImageById(+id);
+            await this.productRepository.update(+id, { image: image.path });
+        }
     }
 
     async findAll(): Promise<Product[]> {
-        let products = await this.productRepository.find();
-        for (let product of products) {
+        const products = await this.productRepository.find();
+        for (const product of products) {
             delete product.image;
         }
         return products;
     }
 
-    async getProductById(id: string): Promise<Product> {
+    async getProductById(id: number): Promise<Product> {
         return await this.productRepository.findOne(id);
     }
 
-    async deleteById(id: string) {
-        const product = await this.productRepository.findOne(id);
-        unlinkSync(product.image);
+    async deleteById(id: number) {
+        this.unlinkImageById(id);
         this.productRepository.delete(id);
+    }
+
+    async unlinkImageById(id: number) {
+        const product = await this.productRepository.findOne(id);
+        if (product.image) {
+            unlinkSync(product.image);
+        }
     }
 }

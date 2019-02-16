@@ -14,6 +14,6 @@ export class Product {
     @Column({ length: 200 })
     location: string;
 
-    @Column('text')
+    @Column('text', { nullable: true })
     image: string;
 }

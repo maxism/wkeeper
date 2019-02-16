@@ -50,36 +50,38 @@
             axios.get(path)
                 .then(response => { 
                     this.product = response.data;
-                    this.url = path + '/image';
+                    this.url = '/api' + path + '/image';
                      })
-                .catch(error => ( this.error = error ))
-                .then(() => ( this.loading = false ));
+                    .catch(error => ( this.error = error.data ))
+                    .then(() => ( this.loading = false ));
         }
 
         save () {
-            axios.post('/products/' + this.$route.params.id, this.product)
+            const path = '/products/' + this.$route.params.id;
+            axios.post(path, this.product)
                 .then(() => {
                     var formData = new FormData();
                     formData.append('img', this.img);
 
-                    axios.post(this.url, formData, {
+                    axios.post(path + '/image', formData, {
                         headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
                         })
                         .then(() => console.log('success'))
-                        .catch(error => console.log(error));
+                        .catch(error => ( this.error = error.data ));
                 });
         }
 
         handleFileUpload(files: any[]) {
             this.img = files[0];
+            this.url = window.URL.createObjectURL(this.img);
         }
 
         deleteProduct () {
             axios.delete('/products/' + this.$route.params.id)
                 .then(() => (this.$router.push({ name: 'products'})))
-                .catch(error => (this.error = error));
+                .catch(error => (this.error = error.data));
         }
     }
 </script>
