@@ -1,8 +1,8 @@
 <template>
     <div class="content">
-        <img :src="url" width="189" height="255" alt="картинка не найдена">
-        <p/>
-        <input type='file' @change="handleFileUpload($event.target.files)">          
+        <ImageInput v-model="imgInfo">
+            <img slot="activator" :src="imgInfo.url" width="255" height="255" alt="картинка не найдена">
+        </ImageInput>
         <p/>
         <input v-model="name" placeholder="Введите название товара">
         <p/>
@@ -17,22 +17,30 @@
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { Product } from '../interfaces/product.interface';
+    import ImageInput from './ImageInput.vue';
     import axios from 'axios';
 
 
-    @Component
+    @Component({
+        components: { ImageInput }
+    })
     export default class ProductNew extends Vue {
         private name: string = '';
         private description: string = '';
         private location: string = '';
-        private img: any;
+        private imgInfo: any = {};
+        //private url: string = "";
+
+        $refs: any = {
+            file: HTMLInputElement
+        }
 
         submit() {
             var formData = new FormData();
             formData.append('name', this.name);
             formData.append('description', this.description);
             formData.append('location', this.location);
-            formData.append('img', this.img);
+            formData.append('img', this.imgInfo.image);
 
             axios.post('/products', formData, {
                 headers: {
@@ -41,10 +49,6 @@
                 })
                 .then(() => console.log('success'))
                 .catch(error => console.log(error));
-        }
-
-        handleFileUpload(files: any[]) {
-            this.img = files[0];
         }
     }
 </script>

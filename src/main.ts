@@ -4,7 +4,7 @@ import { join } from 'path';
 import { NotFoundExceptionFilter } from './not-found-exception.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   app.useStaticAssets(join(__dirname, '..', 'front'));
   app.useGlobalFilters(new NotFoundExceptionFilter());
   await app.listen(3000);

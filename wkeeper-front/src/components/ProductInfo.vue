@@ -1,27 +1,31 @@
 <template>
-    <div class="info">
-        <input v-model="product.name" placeholder="Enter name of product">
+    <div class="content">
+        <input 
+            :value="value.name"
+            @input="$emit('input', value)" 
+            placeholder="Введите название товара">
         <p/>
-        <textarea v-model="product.description" placeholder="Enter the description"></textarea>
+        <textarea 
+            :value="value.description"
+            @input="$emit('input', value)" 
+            placeholder="Введите описание товара"/>
         <p/>
-        <input v-model="product.location" placeholder="Enter location of product">
-        <p/>
+        <input 
+            :value="value.location"
+            @input="$emit('input', value)"
+            placeholder="Введите местоположение товара">
     </div>
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator';
+    import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
+    import axios from 'axios';
 
     @Component
     export default class ProductInfo extends Vue {
-        @Prop({ 
-            type: Object, 
-            required: true,
-            default: () => ({})
-            }) product: object = {};
-
-        mounted () {
-            alert(Object.values(this.product));
-        }
+        @Prop({
+            type: Object
+        })
+        private value: object = {};
     }
 </script>

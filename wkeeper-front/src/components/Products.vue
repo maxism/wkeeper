@@ -19,15 +19,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="product in products" :key="product.id" @click="clicked(product.id)">
+                    <tr v-for="product in products" :key="product.id" @click="clicked(product.id, $event)">
                         <td>{{ product.id }}</td>
                         <td>{{ product.name }}</td>
                         <td>{{ product.description }}</td>
                         <td>{{ product.location }}</td>
+                        <td>
+                            <input type="checkbox" :id="product.id" v-if="deleting" v-model="forDelete.id">
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <button @click="add">Добавить товар</button>
+            <button @click="deleteProducts">Удалить товары</button>
         </div>
     </div>
 </template>
@@ -41,13 +45,19 @@
         private loading: boolean = false;
         private error: string = "";
         private products: any[] = [];
+        private forDelete: any = {};
+        private deleting: boolean = false;
 
         created () {
             this.getProducts();
         }
 
         clicked(id: number): void {
-            this.$router.push({name: 'productEdit', params: { id: id.toString() }});
+            if (!this.deleting) {
+                this.$router.push({name: 'productEdit', params: { id: id.toString() }});
+            } else {
+                this.forDelete[id] = true;
+            }
         }
 
         @Watch('$route')
@@ -60,8 +70,12 @@
                 .then(() => (this.loading = false));
         }
 
-        add () {
+        add() {
             this.$router.push({ name: 'new' });
+        }
+
+        deleteProducts() {
+            this.deleting = true;
         }
     }
 </script>

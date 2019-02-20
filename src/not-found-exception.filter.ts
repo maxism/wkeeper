@@ -10,4 +10,3 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
         response.sendFile(path.resolve('./front/index.html'));
     }
 }
-

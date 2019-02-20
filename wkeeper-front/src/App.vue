@@ -10,16 +10,16 @@ import { Component, Vue } from 'vue-property-decorator';
 import Products from './components/Products.vue';
 import ProductEdit from './components/ProductEdit.vue';
 import ProductNew from './components/ProductNew.vue';
-import ProductInfo from './components/ProductInfo.vue';
-import NotFound from './components/NotFound.vue'
+//import ImageInput from './components/ImageInput.vue';
+import NotFound from './components/NotFound.vue';
 
 @Component({
   components: {
       Products,
       ProductEdit,
       ProductNew,
-      ProductInfo,
-      NotFound, 
+      //ImageInput,
+      NotFound,
   },
 })
 export default class App extends Vue {}
