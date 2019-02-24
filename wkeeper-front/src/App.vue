@@ -13,15 +13,7 @@ import ProductNew from './components/ProductNew.vue';
 //import ImageInput from './components/ImageInput.vue';
 import NotFound from './components/NotFound.vue';
 
-@Component({
-  components: {
-      Products,
-      ProductEdit,
-      ProductNew,
-      //ImageInput,
-      NotFound,
-  },
-})
+@Component
 export default class App extends Vue {}
 </script>
 

@@ -6,8 +6,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 
 // Multer configuration
 export const multerConfig = {
-    // dest: process.env.UPLOAD_LOCATION,
-    dest: 'C:\\Users\\Asusq\\Desktop\\my_proj\\TypeScript\\wkeeper\\images',
+    dest: process.env.UPLOAD_LOCATION,
 };
 
 // Multer upload options

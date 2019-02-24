@@ -4,12 +4,7 @@
             <img slot="activator" :src="imgInfo.url" width="255" height="255" alt="картинка не найдена">
         </ImageInput>
         <p/>
-        <input v-model="name" placeholder="Введите название товара">
-        <p/>
-        <textarea v-model="description" placeholder="Введите описание товара"></textarea>
-        <p/>
-        <input v-model="location" placeholder="Введите местоположение товара">
-        <p/>
+        <ProductInfo v-model="product"/>
         <button @click="submit">Добавить товар</button>
     </div>
 </template>
@@ -18,17 +13,18 @@
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { Product } from '../interfaces/product.interface';
     import ImageInput from './ImageInput.vue';
+    import ProductInfo from './ProductInfo.vue';
+    import PropertyPicker from './PropertyPicker.vue';
     import axios from 'axios';
 
 
     @Component({
-        components: { ImageInput }
+        components: { ImageInput, ProductInfo, PropertyPicker }
     })
     export default class ProductNew extends Vue {
-        private name: string = '';
-        private description: string = '';
-        private location: string = '';
+        private product: any = {};
         private imgInfo: any = {};
+        //private error: string = "";
         //private url: string = "";
 
         $refs: any = {
@@ -37,11 +33,11 @@
 
         submit() {
             var formData = new FormData();
-            formData.append('name', this.name);
-            formData.append('description', this.description);
-            formData.append('location', this.location);
+            this.encodeDate();
+            for (let key in this.product) {
+                formData.append(key, this.product[key])
+            }
             formData.append('img', this.imgInfo.image);
-
             axios.post('/products', formData, {
                 headers: {
                         'Content-Type': 'multipart/form-data'
@@ -50,5 +46,13 @@
                 .then(() => console.log('success'))
                 .catch(error => console.log(error));
         }
+
+        encodeDate() {
+            if (this.product.date) {
+                this.product.date = new Date(this.product.date).toISOString();
+            }
+        }
+
+        
     }
 </script>

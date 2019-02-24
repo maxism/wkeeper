@@ -12,32 +12,7 @@
             <ImageInput v-model="imgInfo">
                 <img slot="activator" :src="imgInfo.url" width="255" height="255" alt="картинка не найдена">
             </ImageInput>
-            <!--<ProductInfo v-model="product"/>-->
-            <input v-model="product.name" placeholder="Введите название товара">
-            <p/>
-            <textarea v-model="product.description" placeholder="Введите описание товара"></textarea>
-            <p/>
-            <input v-model="product.location" placeholder="Введите местоположение товара">
-            <p/>
-            <PropertyPicker description="Дата">
-                <input type="date" v-model="product.date">
-            </PropertyPicker>
-            <p/>
-            <PropertyPicker description="Количество">
-                <input type="number" v-model="product.count">
-            </PropertyPicker>
-            <p/>
-            <PropertyPicker description="Страна">
-                <select v-model="product.country">
-                    <option v-for="country in countries" :key="country.id">  
-                        {{ country.name }}
-                    </option> 
-                </select>
-            </PropertyPicker>
-            <p/>
-            <PropertyPicker description="">
-                <input v-model="product."
-            </PropertyPicker>
+            <ProductInfo v-model="product"/>
             <button @click="save">Сохранить изменения</button>
             <button @click="deleteProduct">Удалить товар</button>
         </div>
@@ -68,10 +43,6 @@
             { id: 3, name: "Испания" },
         ]
 
-        $refs: any = {
-            file: HTMLInputElement
-        }
-
         created () {
             this.fetchData();
         }
@@ -83,6 +54,7 @@
             axios.get(path)
                 .then(response => { 
                     this.product = response.data;
+                    this.decodeDate();
                     this.imgInfo.url = axios.defaults.baseURL + path + '/image';
                      })
                     .catch(error => ( this.error = error.data ))
@@ -90,6 +62,7 @@
         }
 
         save () {
+            this.encodeDate();
             const path = '/products/' + this.$route.params.id;
             axios.post(path, this.product)
                 .then(() => {
@@ -110,6 +83,18 @@
             axios.delete('/products/' + this.$route.params.id)
                 .then(() => (this.$router.push({ name: 'products'})))
                 .catch(error => (this.error = error.data));
+        }
+
+        encodeDate() {
+            if (this.product.date) {
+                this.product.date = new Date(this.product.date).toISOString();
+            }
+        }
+
+        decodeDate() {
+            if (this.product.date) {
+                this.product.date = this.product.date.slice(0, 10); 
+            }
         }
     }
 </script>
