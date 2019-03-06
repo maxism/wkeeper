@@ -64,16 +64,15 @@
             type: Object
         })
         private value: any = {};
-        private countries: any[] = [
-            { id: 1, name: "Россия" },
-            { id: 2, name: "Германия" },
-            { id: 3, name: "Испания" },
-        ]
         private localDate: string = "";
         private showDate: boolean = false;
         private showCount: boolean = false;
         private showCountry: boolean = false;
         private showComment: boolean = false;
+
+        get countries () {
+            return this.$store.state.countries;
+        }
 
         @Watch('value.count')
         transformCount() {

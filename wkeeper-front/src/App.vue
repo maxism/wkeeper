@@ -7,12 +7,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Products from './components/Products.vue';
-import ProductEdit from './components/ProductEdit.vue';
-import ProductNew from './components/ProductNew.vue';
-//import ImageInput from './components/ImageInput.vue';
-import NotFound from './components/NotFound.vue';
-
+// TODO add header
 @Component
 export default class App extends Vue {}
 </script>

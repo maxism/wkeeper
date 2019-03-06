@@ -1,7 +1,7 @@
 <template>
     <div class="info">
         <div @click="launchFilePicker">
-            <slot name="activator"></slot>
+            <img :src="value.url" width="255" height="255" alt="картинка не найдена">
         </div>
         <input type='file' ref='file' style="display:none" @change="handleFileUpload($event.target.files)">
     </div>

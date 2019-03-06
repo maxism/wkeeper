@@ -15,19 +15,19 @@ export class ProductsController {
     @UsePipes(ValidationPipe)
     @UseInterceptors(FileInterceptor('img', multerOptions))
     async create(@Body() createProductDto: CreateProductDto, @UploadedFile() image) {
-        this.productsService.create(createProductDto, image);
+        return await this.productsService.create(createProductDto, image);
     }
 
     @Post(':id')
     @UsePipes(ValidationPipe)
     async updateInfo(@Param('id', ParseUintPipe) id, @Body() updateProductDto: UpdateProductDto) {
-        this.productsService.updateInfo(updateProductDto);
+        return await this.productsService.updateInfo(updateProductDto);
     }
 
     @Post(':id/image')
     @UseInterceptors(FileInterceptor('img', multerOptions))
     async updateImage(@Param('id', ParseUintPipe) id, @UploadedFile() image) {
-        this.productsService.updateImage(id, image);
+        return await this.productsService.updateImage(id, image);
     }
 
     @Get()
@@ -69,7 +69,7 @@ export class ProductsController {
     }
 
     @Delete(':id')
-    deleteById(@Param('id', ParseUintPipe) id) {
-        this.productsService.deleteById(id);
+    async deleteById(@Param('id', ParseUintPipe) id) {
+        return await this.productsService.deleteById(id);
     }
 }

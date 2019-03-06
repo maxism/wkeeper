@@ -47,7 +47,7 @@ export class ProductsService {
 
     async deleteById(id: number) {
         this.unlinkImageById(id);
-        this.productRepository.delete(id);
+        return await this.productRepository.delete(id);
     }
 
     async unlinkImageById(id: number) {

@@ -1,9 +1,5 @@
 <template>
-    <div class="products">
-        <div v-if="loading" class="loading">
-            Загрузка...
-        </div>
-        
+    <div class="products">     
         <div v-if="error" class="error">
             {{ error }}
         </div>
@@ -38,18 +34,31 @@
 
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
+    import { EventBus } from '../utils';
     import axios from 'axios';
 
     @Component
     export default class Products extends Vue {
-        private loading: boolean = false;
         private error: string = "";
-        private products: any[] = [];
         private forDelete: any = {};
         private deleting: boolean = false;
 
-        created () {
-            this.getProducts();
+        beforeMount () {
+            this.$store.dispatch('getProducts');
+        }
+
+        get products () {
+            return this.$store.state.products;
+        }
+
+        mounted () {
+            EventBus.$on('failedGetProducts', (msg: any) =>{
+                this.error = msg;
+            })
+        }
+
+        beforeDestroy () {
+            EventBus.$off('failedGetProducts');
         }
 
         clicked(id: number): void {
@@ -58,16 +67,6 @@
             } else {
                 this.forDelete[id] = true;
             }
-        }
-
-        @Watch('$route')
-        getProducts () {
-            this.loading = true;
-            axios
-                .get('/products')
-                .then(response => (this.products = response.data))
-                .catch(error => (this.error = error))
-                .then(() => (this.loading = false));
         }
 
         add() {
