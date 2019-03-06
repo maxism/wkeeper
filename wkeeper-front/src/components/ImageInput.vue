@@ -1,39 +1,46 @@
 <template>
-    <div class="info">
-        <div @click="launchFilePicker">
-            <img :src="value.url" width="255" height="255" alt="картинка не найдена">
-        </div>
-        <input type='file' ref='file' style="display:none" @change="handleFileUpload($event.target.files)">
+  <div class="info">
+    <div @click="launchFilePicker">
+      <img :src="value.url" width="255" height="255" alt="картинка не найдена">
     </div>
+    <input
+      type="file"
+      ref="file"
+      style="display:none"
+      @change="handleFileUpload($event.target.files)"
+    >
+  </div>
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
-    @Component
-    export default class ImageInput extends Vue {
-        @Prop({ 
-            type: Object, 
-            }) value: object = {};
-        private url: string = "";
-        private img: any;
+@Component
+export default class ImageInput extends Vue {
+  @Prop({
+    type: Object,
+  })
+  value: object;
 
-        $refs: any = {
-            file: HTMLInputElement
-        }
+  private url: string = '';
+  private img!: any;
 
-        handleFileUpload(files: any[]) {
-            this.img = files[0];
-            this.url = window.URL.createObjectURL(this.img);
-            this.$emit('input', {
-                url: this.url,
-                image: this.img 
-                });
-        }
+  $refs: any = {
+    file: HTMLInputElement,
+  };
 
-        launchFilePicker() {
-            this.$refs.file.click();
-        }
-    }
+  handleFileUpload(files: any[]) {
+    this.img = files[0];
+    this.url = window.URL.createObjectURL(this.img);
+    this.$emit('input', {
+      url: this.url,
+      image: this.img,
+    });
+  }
+
+  launchFilePicker() {
+    this.$refs.file.click();
+  }
+}
 </script>
 >

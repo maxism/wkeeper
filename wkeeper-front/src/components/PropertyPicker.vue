@@ -14,7 +14,7 @@
         private description: string = "";
         private local: string = this.description;
         private show: boolean = false;
-        
+
         pick() {
             this.show = !this.show;
         }

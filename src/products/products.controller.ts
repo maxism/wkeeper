@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, UsePipes, Res, Param, Delete, UseInterceptors, FileInterceptor, UploadedFile, HttpStatus, HttpException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UsePipes,
+  Res,
+  Param,
+  Delete,
+  UseInterceptors,
+  FileInterceptor,
+  UploadedFile,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-products.dto';
 import { ProductsService } from './products.service';
@@ -9,67 +23,85 @@ import { multerOptions } from './multer.config';
 
 @Controller('api/products')
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) {}
 
-    @Post()
-    @UsePipes(ValidationPipe)
-    @UseInterceptors(FileInterceptor('img', multerOptions))
-    async create(@Body() createProductDto: CreateProductDto, @UploadedFile() image) {
-        return await this.productsService.create(createProductDto, image);
-    }
+  @Post()
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FileInterceptor('img', multerOptions))
+  async create(
+    @Body() createProductDto: CreateProductDto,
+    @UploadedFile() image,
+  ) {
+    return await this.productsService.create(createProductDto, image);
+  }
 
-    @Post(':id')
-    @UsePipes(ValidationPipe)
-    async updateInfo(@Param('id', ParseUintPipe) id, @Body() updateProductDto: UpdateProductDto) {
-        return await this.productsService.updateInfo(updateProductDto);
-    }
+  @Post(':id')
+  @UsePipes(ValidationPipe)
+  async updateInfo(
+    @Param('id', ParseUintPipe) id,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return await this.productsService.updateInfo(updateProductDto);
+  }
 
-    @Post(':id/image')
-    @UseInterceptors(FileInterceptor('img', multerOptions))
-    async updateImage(@Param('id', ParseUintPipe) id, @UploadedFile() image) {
-        return await this.productsService.updateImage(id, image);
-    }
+  @Post(':id/image')
+  @UseInterceptors(FileInterceptor('img', multerOptions))
+  async updateImage(@Param('id', ParseUintPipe) id, @UploadedFile() image) {
+    return await this.productsService.updateImage(id, image);
+  }
 
-    @Get()
-    async findAll(): Promise<Product[]> {
-        return await this.productsService.findAll();
-    }
+  @Get()
+  async findAll(): Promise<Product[]> {
+    return await this.productsService.findAll();
+  }
 
-    @Get(':id')
-    async getProductById(@Param('id', ParseUintPipe) id) {
-        const product = await this.productsService.getProductById(id);
-        if (product == null) {
-            throw new HttpException({
-                status: HttpStatus.NOT_FOUND,
-                error: 'Такого продукта не существует',
-              }, HttpStatus.NOT_FOUND);
-        }
-        delete product.image;
-        return product;
+  @Get(':id')
+  async getProductById(@Param('id', ParseUintPipe) id) {
+    const product = await this.productsService.getProductById(id);
+    if (product == null) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Такого продукта не существует',
+        },
+        HttpStatus.NOT_FOUND,
+      );
     }
+    delete product.image;
+    return product;
+  }
 
-    @Get(':id/image')
-    async getImageById(@Param('id', ParseUintPipe) id, @Res() res) {
-        const product = await this.productsService.getProductById(id);
-        if (product == null) {
-            throw new HttpException({
-                status: HttpStatus.NOT_FOUND,
-                error: 'Такого продукта не существует',
-              }, HttpStatus.NOT_FOUND);
-        } else {
-            if (product.image == null) {
-                throw new HttpException({
-                    status: HttpStatus.NOT_FOUND,
-                    error: 'Изображение не доступно',
-                  }, HttpStatus.NOT_FOUND);
-            } else {
-                res.sendFile(product.image);
-            }
-        }
-    }
+  @Get(':id/image')
+  async getImageById(@Param('id', ParseUintPipe) id, @Res() res) {
+    const product = await this.productsService.getProductById(id);
 
-    @Delete(':id')
-    async deleteById(@Param('id', ParseUintPipe) id) {
-        return await this.productsService.deleteById(id);
+    if (product === null) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Такого продукта не существует',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      if (product.image === null) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            error: 'Изображение не доступно',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        res.sendFile(product.image);
+
+        console.log(product.image);
+      }
     }
+  }
+
+  @Delete(':id')
+  async deleteById(@Param('id', ParseUintPipe) id) {
+    return await this.productsService.deleteById(id);
+  }
 }
